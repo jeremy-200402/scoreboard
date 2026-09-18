@@ -22,7 +22,7 @@ cd ../..
 npm run dev:weapp
 ```
 
-然后在微信开发者工具中选择“导入项目”，项目目录选择 `apps/weapp`。`project.config.json` 已将小程序目录配置为 `dist`；当前使用游客 AppID，发布前请替换为微信公众平台中的正式 AppID。
+然后在微信开发者工具中选择“导入项目”，项目目录选择 `apps/weapp`。`project.config.json` 已将小程序目录配置为 `dist`；开发者工具会在导入时写入所选测试号或正式 AppID，个人工具设置不会提交到 Git。
 
 生产构建：
 

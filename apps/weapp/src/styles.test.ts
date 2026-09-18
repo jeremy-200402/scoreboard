@@ -9,4 +9,11 @@ describe('WeChat mini program styles', () => {
     expect(styles).not.toContain('prefers-reduced-motion')
     expect(styles).not.toMatch(/(^|[,{])\s*\*\s*[{,]/m)
   })
+
+  it('keeps the developer tool pointed at the generated mini program', () => {
+    const config = JSON.parse(readFileSync(resolve(process.cwd(), 'apps/weapp/project.config.json'), 'utf8'))
+
+    expect(config.miniprogramRoot).toBe('dist/')
+    expect(config.compileType).toBe('miniprogram')
+  })
 })
