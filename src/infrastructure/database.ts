@@ -1,9 +1,9 @@
 import Dexie, { type EntityTable } from 'dexie'
-import type { Room, TransferBatch } from '../domain/models'
+import type { Room, ScoreOperation } from '../domain/models'
 
 export class ScoreboardDatabase extends Dexie {
   rooms!: EntityTable<Room, 'id'>
-  transferBatches!: EntityTable<TransferBatch, 'id'>
+  transferBatches!: EntityTable<ScoreOperation, 'id'>
 
   constructor() {
     super('scoreboard-mvp')
@@ -26,7 +26,7 @@ export const scoreboardRepository = {
   async saveRoom(room: Room) {
     await db.rooms.put(room)
   },
-  async saveBatch(batch: TransferBatch) {
+  async saveBatch(batch: ScoreOperation) {
     await db.transferBatches.put(batch)
   },
   async clearAll() {
@@ -35,4 +35,3 @@ export const scoreboardRepository = {
     })
   },
 }
-

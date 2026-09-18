@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link, Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
-import type { Player, Room, Transfer, TransferBatch } from './domain/models'
-import { assertZeroSum, batchTotal, calculateScores } from './domain/score'
+import type { Player, PlayerLoss, Room, ScoreOperation } from './domain/models'
+import { assertZeroSum, calculateScores, isWinnerOperation, operationTotal } from './domain/score'
 import { useScoreboardStore } from './stores/scoreboard'
 
 const formatDate = (value: string) =>
@@ -83,7 +83,7 @@ function HomePage() {
           <div className="hero-copy">
             <p className="eyebrow">牌局记清楚，输赢不糊涂</p>
             <h1>把分记在桌上，<br />把心留在牌里。</h1>
-            <p className="hero-note">麻将、扑克都能用。一人给，多人收，每一笔自动归零。</p>
+            <p className="hero-note">麻将、扑克都能用。选出本局赢家，最后一人的支出自动算平。</p>
           </div>
           <div className="zero-seal" aria-label="零和记分">
             <span className="zero-seal__number">0</span>
@@ -112,7 +112,7 @@ function HomePage() {
             <p className="section-kicker">三步完成</p>
             <ol>
               <li><span>1</span>添加 2–8 位玩家</li>
-              <li><span>2</span>选择给分人和接收人</li>
+              <li><span>2</span>选择赢家并填写本局输赢</li>
               <li><span>3</span>一次确认，自动算平</li>
             </ol>
           </section>
@@ -122,7 +122,7 @@ function HomePage() {
   )
 }
 
-function RoomList({ title, rooms, batches }: { title: string; rooms: Room[]; batches: TransferBatch[] }) {
+function RoomList({ title, rooms, batches }: { title: string; rooms: Room[]; batches: ScoreOperation[] }) {
   return (
     <section className="room-list-section">
       <div className="section-heading">
@@ -180,7 +180,7 @@ function CreateRoomPage() {
       <main className="form-page">
         <p className="eyebrow">新牌局</p>
         <h1>谁上桌？</h1>
-        <p className="page-lead">所有人从 0 分开始，牌局中每一笔给分都会自动保持平衡。</p>
+        <p className="page-lead">所有人从 0 分开始，每局选择一位赢家，系统自动核对输赢平衡。</p>
 
         <form onSubmit={handleSubmit}>
           <label className="field">
@@ -230,7 +230,7 @@ function RoomPage() {
   const allBatches = useScoreboardStore((state) => state.batches)
   const voidTransfer = useScoreboardStore((state) => state.voidTransfer)
   const endRoom = useScoreboardStore((state) => state.endRoom)
-  const [editor, setEditor] = useState<TransferBatch | 'new' | null>(null)
+  const [editor, setEditor] = useState<ScoreOperation | 'new' | null>(null)
   const [showAll, setShowAll] = useState(false)
 
   const roomBatches = useMemo(
@@ -253,7 +253,7 @@ function RoomPage() {
       <main>
         <header className="room-titlebar">
           <div>
-            <p className="eyebrow">{room.status === 'active' ? '进行中' : '已结束'} · {activeCount} 笔给分</p>
+            <p className="eyebrow">{room.status === 'active' ? '进行中' : '已结束'} · {activeCount} 局记录</p>
             <h1>{room.name}</h1>
           </div>
           <button className="text-button" onClick={() => setShowAll((value) => !value)}>{showAll ? '收起流水' : '全部流水'}</button>
@@ -278,8 +278,8 @@ function RoomPage() {
 
         {room.status === 'active' && (
           <button className="deal-button" onClick={() => setEditor('new')}>
-            <span className="deal-button__mark">给</span>
-            <span><strong>记一笔给分</strong><small>支持一次给多人</small></span>
+            <span className="deal-button__mark">记</span>
+            <span><strong>记录本局</strong><small>选赢家，填写每人输赢</small></span>
             <ArrowIcon />
           </button>
         )}
@@ -290,7 +290,7 @@ function RoomPage() {
             <span>总分始终为 0</span>
           </div>
           {roomBatches.length === 0 ? (
-            <div className="empty-ledger"><p>还没有给分记录</p><span>第一笔会出现在这里</span></div>
+            <div className="empty-ledger"><p>还没有本局记录</p><span>第一局结果会出现在这里</span></div>
           ) : (
             <div className="ledger-list">
               {(showAll ? roomBatches : roomBatches.slice(0, 4)).map((batch) => (
@@ -298,7 +298,7 @@ function RoomPage() {
                   key={batch.id}
                   batch={batch}
                   players={room.players}
-                  editable={room.status === 'active'}
+                  editable={room.status === 'active' && isWinnerOperation(batch)}
                   onEdit={() => setEditor(batch)}
                   onVoid={() => voidTransfer(batch.id)}
                 />
@@ -324,23 +324,31 @@ function RoomPage() {
 }
 
 function LedgerRow({ batch, players, editable, onEdit, onVoid }: {
-  batch: TransferBatch
+  batch: ScoreOperation
   players: Player[]
   editable: boolean
   onEdit: () => void
   onVoid: () => void
 }) {
   const playerName = (id: string) => players.find((player) => player.id === id)?.name ?? '未知玩家'
+  const winnerMode = isWinnerOperation(batch)
+  const focusPlayerId = winnerMode ? batch.winnerId : batch.giverId
   return (
     <article className={`ledger-row ${batch.status === 'voided' ? 'ledger-row--voided' : ''}`}>
-      <div className="ledger-row__stamp">{playerName(batch.giverId).slice(0, 1)}</div>
+      <div className="ledger-row__stamp">{playerName(focusPlayerId).slice(0, 1)}</div>
       <div className="ledger-row__content">
         <div className="ledger-row__line">
-          <p><strong>{playerName(batch.giverId)}</strong> 给出 <b>{batchTotal(batch)}</b> 分</p>
+          <p>
+            <strong>{playerName(focusPlayerId)}</strong>
+            {winnerMode ? ' 赢得 ' : ' 给出 '}
+            <b>{operationTotal(batch)}</b> 分
+          </p>
           <time>{formatDate(batch.createdAt)}</time>
         </div>
         <p className="ledger-row__recipients">
-          {batch.transfers.map((transfer) => `${playerName(transfer.recipientId)} +${transfer.amount}`).join(' · ')}
+          {winnerMode
+            ? batch.losses.map((loss) => `${playerName(loss.playerId)} −${loss.amount}`).join(' · ')
+            : batch.transfers.map((transfer) => `${playerName(transfer.recipientId)} +${transfer.amount}`).join(' · ')}
         </p>
         {batch.note && <p className="ledger-row__note">“{batch.note}”</p>}
         {batch.status === 'voided' && <span className="void-label">已撤销</span>}
@@ -355,31 +363,55 @@ function LedgerRow({ batch, players, editable, onEdit, onVoid }: {
   )
 }
 
-function TransferSheet({ room, batch, onClose }: { room: Room; batch?: TransferBatch; onClose: () => void }) {
-  const saveTransfer = useScoreboardStore((state) => state.saveTransfer)
-  const [giverId, setGiverId] = useState(batch?.giverId ?? room.players[0].id)
-  const [amounts, setAmounts] = useState<Record<string, string>>(
-    Object.fromEntries(batch?.transfers.map((transfer) => [transfer.recipientId, String(transfer.amount)]) ?? []),
+function TransferSheet({ room, batch, onClose }: { room: Room; batch?: ScoreOperation; onClose: () => void }) {
+  const saveOperation = useScoreboardStore((state) => state.saveOperation)
+  const editableBatch = batch && isWinnerOperation(batch) ? batch : undefined
+  const initialWinnerId = editableBatch?.winnerId ?? room.players[0].id
+  const initialAutoPlayerId = room.players.filter((player) => player.id !== initialWinnerId).at(-1)?.id
+  const [winnerId, setWinnerId] = useState(initialWinnerId)
+  const [winAmount, setWinAmount] = useState(editableBatch ? String(editableBatch.winAmount) : '')
+  const [lossAmounts, setLossAmounts] = useState<Record<string, string>>(
+    Object.fromEntries(editableBatch?.losses.filter((loss) => loss.playerId !== initialAutoPlayerId).map((loss) => [loss.playerId, String(loss.amount)]) ?? []),
   )
   const [note, setNote] = useState(batch?.note ?? '')
   const [error, setError] = useState('')
-  const giver = room.players.find((player) => player.id === giverId)!
-  const recipients = room.players.filter((player) => player.id !== giverId)
-  const transfers: Transfer[] = recipients
-    .map((player) => ({ recipientId: player.id, amount: Number(amounts[player.id]) }))
-    .filter((transfer) => Number.isInteger(transfer.amount) && transfer.amount > 0)
-  const total = transfers.reduce((sum, transfer) => sum + transfer.amount, 0)
+  const winner = room.players.find((player) => player.id === winnerId)!
+  const losers = room.players.filter((player) => player.id !== winnerId)
+  const target = Number(winAmount)
+  const autoPlayerId = losers.at(-1)?.id ?? null
+  const manualLosers = losers.filter((player) => player.id !== autoPlayerId)
+  const canAutoFill = Number.isInteger(target) && target > 0 && manualLosers.every((player) => Number(lossAmounts[player.id]) > 0)
+  const filledLossTotal = manualLosers.reduce((sum, player) => sum + Number(lossAmounts[player.id] || 0), 0)
+  const autoAmount = canAutoFill ? target - filledLossTotal : 0
+  const losses: PlayerLoss[] = losers.map((player) => ({
+    playerId: player.id,
+    amount: player.id === autoPlayerId ? autoAmount : Number(lossAmounts[player.id]),
+  }))
+  const lossTotal = losses.reduce((sum, loss) => sum + (Number.isFinite(loss.amount) ? loss.amount : 0), 0)
+  const isBalanced = target > 0 && lossTotal === target && losses.every((loss) => Number.isInteger(loss.amount) && loss.amount > 0)
+  const balanceLabel = !target
+    ? '先填写赢家赢分'
+    : !canAutoFill
+      ? '填写其他输家的支出'
+      : autoAmount <= 0
+        ? '请为最后一人留出支出'
+        : isBalanced ? '本局已算平' : `还差 ${Math.abs(target - lossTotal)} 分`
 
-  const handleGiverChange = (id: string) => {
-    setGiverId(id)
-    setAmounts((current) => ({ ...current, [id]: '' }))
+  const handleWinnerChange = (id: string) => {
+    setWinnerId(id)
+    setLossAmounts({})
+    setError('')
+  }
+
+  const updateLoss = (playerId: string, value: string) => {
+    setLossAmounts((current) => ({ ...current, [playerId]: value.replace(/\D/g, '') }))
     setError('')
   }
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     try {
-      await saveTransfer({ roomId: room.id, giverId, transfers, note, batchId: batch?.id })
+      await saveOperation({ roomId: room.id, winnerId, winAmount: target, losses, note, batchId: batch?.id })
       onClose()
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : '保存失败，请重试')
@@ -391,56 +423,71 @@ function TransferSheet({ room, batch, onClose }: { room: Room; batch?: TransferB
       <section className="transfer-sheet" role="dialog" aria-modal="true" aria-labelledby="transfer-title">
         <div className="sheet-handle" />
         <header className="sheet-header">
-          <div><p className="eyebrow">{batch ? '修改流水' : '批量给分'}</p><h2 id="transfer-title">这局谁给分？</h2></div>
+          <div><p className="eyebrow">{batch ? '修改本局' : '记录本局'}</p><h2 id="transfer-title">这局谁赢了？</h2></div>
           <button className="icon-button" onClick={onClose} aria-label="关闭">×</button>
         </header>
         <form onSubmit={handleSubmit}>
-          <div className="giver-tabs" role="radiogroup" aria-label="给分人">
+          <div className="giver-tabs" role="radiogroup" aria-label="选择赢家">
             {room.players.map((player) => (
               <button
                 type="button"
                 role="radio"
-                aria-checked={giverId === player.id}
-                className={giverId === player.id ? 'is-active' : ''}
-                onClick={() => handleGiverChange(player.id)}
+                aria-checked={winnerId === player.id}
+                className={winnerId === player.id ? 'is-active' : ''}
+                onClick={() => handleWinnerChange(player.id)}
                 key={player.id}
               >{player.name}</button>
             ))}
           </div>
 
-          <div className="recipient-list">
-            <p className="input-caption">分别给多少分</p>
-            {recipients.map((player) => (
-              <label className="recipient-row" key={player.id}>
-                <span>{player.name}</span>
-                <div className="amount-input">
-                  <button type="button" aria-label={`${player.name}减一分`} onClick={() => setAmounts((current) => ({ ...current, [player.id]: String(Math.max(0, Number(current[player.id] || 0) - 1) || '') }))}>−</button>
+          <div className="score-entry-list">
+            <p className="input-caption">填写本局输赢</p>
+            <label className="score-entry-row score-entry-row--winner">
+              <span className="score-entry-player"><b>{winner.name}</b><small>赢家</small></span>
+              <span className="score-entry-sign">＋</span>
+              <input
+                inputMode="numeric"
+                pattern="[0-9]*"
+                aria-label={`${winner.name}赢的分数`}
+                value={winAmount}
+                onChange={(event) => { setWinAmount(event.target.value.replace(/\D/g, '')); setError('') }}
+                placeholder="0"
+              />
+            </label>
+            {losers.map((player) => {
+              const isAuto = player.id === autoPlayerId
+              return (
+                <label className={`score-entry-row ${isAuto ? 'score-entry-row--auto' : ''}`} key={player.id}>
+                  <span className="score-entry-player"><b>{player.name}</b><small>{isAuto ? '自动补齐' : '输家支出'}</small></span>
+                  <span className="score-entry-sign">−</span>
                   <input
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    aria-label={`给${player.name}的分数`}
-                    value={amounts[player.id] ?? ''}
-                    onChange={(event) => setAmounts((current) => ({ ...current, [player.id]: event.target.value.replace(/\D/g, '') }))}
+                    aria-label={`${player.name}支出的分数`}
+                    value={isAuto ? (canAutoFill && autoAmount > 0 ? String(autoAmount) : '') : (lossAmounts[player.id] ?? '')}
+                    onChange={(event) => updateLoss(player.id, event.target.value)}
                     placeholder="0"
+                    readOnly={isAuto}
                   />
-                  <button type="button" aria-label={`${player.name}加一分`} onClick={() => setAmounts((current) => ({ ...current, [player.id]: String(Number(current[player.id] || 0) + 1) }))}>＋</button>
-                </div>
-              </label>
-            ))}
+                </label>
+              )
+            })}
+            <div className={`balance-strip ${isBalanced ? 'is-balanced' : ''}`}>
+              <span>{balanceLabel}</span>
+              <strong>＋{target || 0} / −{lossTotal}</strong>
+            </div>
           </div>
+
+          <p className="auto-hint">填完赢家和其他输家的分数，最后一人的支出会自动计算。</p>
 
           <label className="field field--compact">
             <span>备注 <small>可选</small></span>
             <input value={note} onChange={(event) => setNote(event.target.value)} placeholder="例如：自摸、炸弹" maxLength={24} />
           </label>
 
-          <div className="transfer-summary">
-            <div><span>本次共给出</span><strong>{total}</strong><small>分</small></div>
-            <p>{giver.name} 将扣除 <b>{total}</b> 分</p>
-          </div>
           {error && <p className="form-error" role="alert">{error}</p>}
-          <button type="submit" className="button button--primary button--large button--full" disabled={total === 0}>
-            {batch ? '保存修改' : '确认给分'} <span>−{total}</span>
+          <button type="submit" className="button button--primary button--large button--full" disabled={!isBalanced}>
+            {batch ? '保存修改' : '确认本局'} <span>＋{target || 0}</span>
           </button>
         </form>
       </section>
@@ -464,4 +511,3 @@ export default function App() {
     </Routes>
   )
 }
-

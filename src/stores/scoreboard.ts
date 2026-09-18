@@ -1,22 +1,23 @@
 import { create } from 'zustand'
-import type { Room, Transfer, TransferBatch } from '../domain/models'
+import type { PlayerLoss, Room, ScoreOperation, WinnerOperation } from '../domain/models'
 import { scoreboardRepository } from '../infrastructure/database'
-import { transferDraftSchema } from '../domain/score'
+import { winnerOperationDraftSchema } from '../domain/score'
 
 const makeId = () => crypto.randomUUID()
 const now = () => new Date().toISOString()
 
 interface ScoreboardState {
   rooms: Room[]
-  batches: TransferBatch[]
+  batches: ScoreOperation[]
   hydrated: boolean
   load: () => Promise<void>
   createRoom: (name: string, playerNames: string[]) => Promise<Room>
   createDemoRoom: () => Promise<Room>
-  saveTransfer: (input: {
+  saveOperation: (input: {
     roomId: string
-    giverId: string
-    transfers: Transfer[]
+    winnerId: string
+    winAmount: number
+    losses: PlayerLoss[]
     note: string
     batchId?: string
   }) => Promise<void>
@@ -65,38 +66,46 @@ export const useScoreboardStore = create<ScoreboardState>((set, get) => ({
 
   createDemoRoom: async () => {
     const room = await get().createRoom('周五麻将局', ['小张', '小王', '小李', '校长'])
-    const [xiaozhang, xiaowang, xiaoli, xiaozhang2] = room.players
-    await get().saveTransfer({
+    const [xiaozhang, xiaowang, xiaoli, principal] = room.players
+    await get().saveOperation({
       roomId: room.id,
-      giverId: xiaozhang.id,
-      transfers: [
-        { recipientId: xiaowang.id, amount: 2 },
-        { recipientId: xiaoli.id, amount: 6 },
-        { recipientId: xiaozhang2.id, amount: 2 },
+      winnerId: xiaoli.id,
+      winAmount: 10,
+      losses: [
+        { playerId: xiaozhang.id, amount: 2 },
+        { playerId: xiaowang.id, amount: 6 },
+        { playerId: principal.id, amount: 2 },
       ],
-      note: '一炮三响',
+      note: '自摸',
     })
-    await get().saveTransfer({
+    await get().saveOperation({
       roomId: room.id,
-      giverId: xiaowang.id,
-      transfers: [{ recipientId: xiaozhang.id, amount: 4 }],
+      winnerId: xiaozhang.id,
+      winAmount: 4,
+      losses: [
+        { playerId: xiaowang.id, amount: 1 },
+        { playerId: xiaoli.id, amount: 1 },
+        { playerId: principal.id, amount: 2 },
+      ],
       note: '自摸补分',
     })
     return room
   },
 
-  saveTransfer: async ({ roomId, giverId, transfers, note, batchId }) => {
+  saveOperation: async ({ roomId, winnerId, winAmount, losses, note, batchId }) => {
     const room = get().rooms.find((item) => item.id === roomId)
     if (!room || room.status !== 'active') throw new Error('当前房间不可记分')
-    transferDraftSchema.parse({ giverId, transfers })
+    winnerOperationDraftSchema.parse({ winnerId, winAmount, losses })
     const existing = batchId ? get().batches.find((item) => item.id === batchId) : undefined
     const timestamp = now()
-    const batch: TransferBatch = {
+    const batch: WinnerOperation = {
       id: existing?.id ?? makeId(),
       roomId,
-      operatorId: existing?.operatorId ?? giverId,
-      giverId,
-      transfers,
+      operatorId: existing?.operatorId ?? winnerId,
+      kind: 'winner',
+      winnerId,
+      winAmount,
+      losses,
       note: note.trim(),
       status: 'active',
       createdAt: existing?.createdAt ?? timestamp,
@@ -122,4 +131,3 @@ export const useScoreboardStore = create<ScoreboardState>((set, get) => ({
     set({ rooms: get().rooms.map((item) => (item.id === roomId ? ended : item)) })
   },
 }))
-

@@ -154,8 +154,27 @@ a { color: inherit; text-decoration: none; }
 .giver-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 20px 0 18px; }
 .giver-tabs button { flex: 0 0 auto; min-width: 72px; height: 40px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); background: transparent; }
 .giver-tabs button.is-active { color: #fff; border-color: var(--pine); background: var(--pine); }
+.score-entry-list { border-top: 1px solid var(--line); }
 .recipient-list { border-top: 1px solid var(--line); }
 .input-caption { margin: 18px 0 6px; color: var(--muted); font-size: 12px; }
+.score-entry-row { min-height: 64px; display: grid; grid-template-columns: 1fr 26px 74px; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); }
+.score-entry-row--winner { margin-top: 8px; padding: 0 12px; border: 0; border-radius: 12px; color: #fff; background: var(--pine); }
+.score-entry-row--auto { margin: 4px 0; padding: 0 12px; border: 1px dashed rgba(47,118,103,.45); border-radius: 12px; background: var(--mint); }
+.score-entry-player { display: flex; align-items: baseline; gap: 9px; min-width: 0; }
+.score-entry-player b { font-size: 16px; }
+.score-entry-player small { color: var(--muted); font-size: 11px; font-weight: 500; }
+.score-entry-row--winner .score-entry-player small { color: rgba(255,255,255,.65); }
+.score-entry-sign { text-align: right; color: var(--seal); font: 800 24px/1 ui-monospace, monospace; }
+.score-entry-row--winner .score-entry-sign { color: #94dfbb; }
+.score-entry-row input { width: 74px; height: 46px; padding: 0 8px; border: 1px solid var(--line); border-radius: 10px; outline: 0; text-align: center; color: var(--pine-deep); background: #fff; font: 800 23px/1 ui-monospace, monospace; }
+.score-entry-row input:focus { border-color: var(--jade); box-shadow: 0 0 0 3px rgba(47,118,103,.14); }
+.score-entry-row--winner input { border-color: rgba(255,255,255,.18); color: #fff; background: rgba(255,255,255,.11); }
+.score-entry-row--auto input { border-color: transparent; background: rgba(255,255,255,.6); }
+.balance-strip { min-height: 46px; margin-top: 12px; padding: 0 14px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; color: var(--seal); background: rgba(196,71,56,.08); }
+.balance-strip span { font-size: 12px; font-weight: 700; }
+.balance-strip strong { font: 800 13px/1 ui-monospace, monospace; }
+.balance-strip.is-balanced { color: var(--jade); background: var(--mint); }
+.auto-hint { margin: 10px 2px 22px; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .recipient-row { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); font-weight: 800; }
 .amount-input { display: grid; grid-template-columns: 38px 64px 38px; align-items: center; }
 .amount-input button { width: 36px; height: 36px; border: 0; border-radius: 50%; color: var(--jade); background: var(--mint); font-size: 19px; }

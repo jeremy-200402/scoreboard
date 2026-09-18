@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { Room, TransferBatch } from './models'
-import { assertZeroSum, calculateScores, transferDraftSchema } from './score'
+import type { Room, WinnerOperation } from './models'
+import { assertZeroSum, calculateScores, winnerOperationDraftSchema } from './score'
 
 const room: Room = {
   id: 'room-1',
@@ -15,15 +15,17 @@ const room: Room = {
   })),
 }
 
-const batch: TransferBatch = {
+const batch: WinnerOperation = {
   id: 'batch-1',
   roomId: room.id,
-  operatorId: 'p1',
-  giverId: 'p1',
-  transfers: [
-    { recipientId: 'p2', amount: 2 },
-    { recipientId: 'p3', amount: 6 },
-    { recipientId: 'p4', amount: 2 },
+  operatorId: 'p3',
+  kind: 'winner',
+  winnerId: 'p3',
+  winAmount: 10,
+  losses: [
+    { playerId: 'p1', amount: 2 },
+    { playerId: 'p2', amount: 6 },
+    { playerId: 'p4', amount: 2 },
   ],
   note: '',
   status: 'active',
@@ -32,9 +34,9 @@ const batch: TransferBatch = {
 }
 
 describe('score domain', () => {
-  it('calculates one-to-many transfer as a zero-sum batch', () => {
+  it('calculates one winner and multiple losers as a zero-sum operation', () => {
     const scores = calculateScores(room, [batch])
-    expect(scores.map((player) => player.score)).toEqual([-10, 2, 6, 2])
+    expect(scores.map((player) => player.score)).toEqual([-2, -6, 10, -2])
     expect(assertZeroSum(scores)).toBe(true)
   })
 
@@ -43,10 +45,10 @@ describe('score domain', () => {
     expect(scores.map((player) => player.score)).toEqual([0, 0, 0, 0])
   })
 
-  it('rejects self transfers, duplicate recipients and invalid amounts', () => {
-    expect(() => transferDraftSchema.parse({ giverId: 'p1', transfers: [{ recipientId: 'p1', amount: 1 }] })).toThrow()
-    expect(() => transferDraftSchema.parse({ giverId: 'p1', transfers: [{ recipientId: 'p2', amount: 0 }] })).toThrow()
-    expect(() => transferDraftSchema.parse({ giverId: 'p1', transfers: [{ recipientId: 'p2', amount: 1 }, { recipientId: 'p2', amount: 2 }] })).toThrow()
+  it('rejects unbalanced, duplicate, self and invalid loss entries', () => {
+    expect(() => winnerOperationDraftSchema.parse({ winnerId: 'p1', winAmount: 1, losses: [{ playerId: 'p1', amount: 1 }] })).toThrow()
+    expect(() => winnerOperationDraftSchema.parse({ winnerId: 'p1', winAmount: 1, losses: [{ playerId: 'p2', amount: 0 }] })).toThrow()
+    expect(() => winnerOperationDraftSchema.parse({ winnerId: 'p1', winAmount: 3, losses: [{ playerId: 'p2', amount: 1 }, { playerId: 'p2', amount: 2 }] })).toThrow()
+    expect(() => winnerOperationDraftSchema.parse({ winnerId: 'p1', winAmount: 5, losses: [{ playerId: 'p2', amount: 2 }] })).toThrow()
   })
 })
-

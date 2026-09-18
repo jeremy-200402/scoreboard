@@ -24,20 +24,23 @@ describe('Scoreboard app', () => {
     expect(screen.getAllByText('0').length).toBeGreaterThanOrEqual(5)
   })
 
-  it('records a batch transfer with one confirmation', async () => {
+  it('records one winner, accepts loser expenses and auto-fills the final player', async () => {
     const room = await useScoreboardStore.getState().createRoom('测试牌局', ['小张', '小王', '小李', '校长'])
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={[`/room/${room.id}`]}><App /></MemoryRouter>)
 
-    await user.click(screen.getByRole('button', { name: /记一笔给分/ }))
-    await user.type(screen.getByLabelText('给小王的分数'), '2')
-    await user.type(screen.getByLabelText('给小李的分数'), '6')
-    await user.type(screen.getByLabelText('给校长的分数'), '2')
-    await user.click(screen.getByRole('button', { name: /确认给分/ }))
+    await user.click(screen.getByRole('button', { name: /记录本局/ }))
+    await user.click(screen.getByRole('radio', { name: '小李' }))
+    await user.type(screen.getByLabelText('小李赢的分数'), '10')
+    await user.type(screen.getByLabelText('小张支出的分数'), '2')
+    await user.type(screen.getByLabelText('小王支出的分数'), '6')
 
-    expect(await screen.findByText('小王 +2 · 小李 +6 · 校长 +2')).toBeInTheDocument()
-    expect(screen.getByText('-10')).toBeInTheDocument()
+    expect(screen.getByLabelText('校长支出的分数')).toHaveValue('2')
+    expect(screen.getByText('本局已算平')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /确认本局/ }))
+
+    expect(await screen.findByText('小张 −2 · 小王 −6 · 校长 −2')).toBeInTheDocument()
+    expect(screen.getByText('+10')).toBeInTheDocument()
     expect(screen.getByText('账目已平')).toBeInTheDocument()
   })
 })
-

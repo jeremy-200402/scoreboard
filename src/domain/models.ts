@@ -22,19 +22,37 @@ export interface Transfer {
   amount: number
 }
 
-export interface TransferBatch {
+interface OperationBase {
   id: string
   roomId: string
   operatorId: string
-  giverId: string
-  transfers: Transfer[]
   note: string
   status: TransferStatus
   createdAt: string
   updatedAt: string
 }
 
+export interface PlayerLoss {
+  playerId: string
+  amount: number
+}
+
+export interface WinnerOperation extends OperationBase {
+  kind: 'winner'
+  winnerId: string
+  winAmount: number
+  losses: PlayerLoss[]
+}
+
+/** 兼容 V0.1 早期“一人给多人”的本地流水。 */
+export interface LegacyTransferBatch extends OperationBase {
+  kind?: 'transfer'
+  giverId: string
+  transfers: Transfer[]
+}
+
+export type ScoreOperation = WinnerOperation | LegacyTransferBatch
+
 export interface PlayerScore extends Player {
   score: number
 }
-
