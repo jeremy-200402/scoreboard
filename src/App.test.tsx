@@ -13,6 +13,13 @@ describe('Scoreboard app', () => {
     useScoreboardStore.setState({ rooms: [], batches: [], hydrated: true })
   })
 
+  it('keeps the home page focused on creating a real room', () => {
+    render(<MemoryRouter initialEntries={['/']}><App /></MemoryRouter>)
+
+    expect(screen.getByRole('link', { name: /创建新牌局/ })).toBeInTheDocument()
+    expect(screen.queryByText('载入示例牌局')).not.toBeInTheDocument()
+  })
+
   it('creates a four-player room with zero scores', async () => {
     const user = userEvent.setup()
     render(<MemoryRouter initialEntries={['/create']}><App /></MemoryRouter>)

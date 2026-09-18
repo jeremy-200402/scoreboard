@@ -59,21 +59,8 @@ function LoadingScreen() {
 function HomePage() {
   const rooms = useScoreboardStore((state) => state.rooms)
   const batches = useScoreboardStore((state) => state.batches)
-  const createDemoRoom = useScoreboardStore((state) => state.createDemoRoom)
-  const navigate = useNavigate()
-  const [loadingDemo, setLoadingDemo] = useState(false)
   const activeRooms = rooms.filter((room) => room.status === 'active')
   const endedRooms = rooms.filter((room) => room.status === 'ended')
-
-  const loadDemo = async () => {
-    setLoadingDemo(true)
-    try {
-      const room = await createDemoRoom()
-      navigate(`/room/${room.id}`)
-    } finally {
-      setLoadingDemo(false)
-    }
-  }
 
   return (
     <div className="page page--home">
@@ -95,9 +82,6 @@ function HomePage() {
           <Link to="/create" className="button button--primary button--large">
             创建新牌局 <ArrowIcon />
           </Link>
-          <button className="button button--ghost" onClick={loadDemo} disabled={loadingDemo}>
-            {loadingDemo ? '正在准备…' : '载入示例牌局'}
-          </button>
         </section>
 
         {activeRooms.length > 0 && (

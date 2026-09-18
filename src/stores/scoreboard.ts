@@ -12,7 +12,6 @@ interface ScoreboardState {
   hydrated: boolean
   load: () => Promise<void>
   createRoom: (name: string, playerNames: string[]) => Promise<Room>
-  createDemoRoom: () => Promise<Room>
   saveOperation: (input: {
     roomId: string
     winnerId: string
@@ -61,34 +60,6 @@ export const useScoreboardStore = create<ScoreboardState>((set, get) => ({
     }
     await scoreboardRepository.saveRoom(room)
     set({ rooms: [room, ...get().rooms] })
-    return room
-  },
-
-  createDemoRoom: async () => {
-    const room = await get().createRoom('周五麻将局', ['小张', '小王', '小李', '校长'])
-    const [xiaozhang, xiaowang, xiaoli, principal] = room.players
-    await get().saveOperation({
-      roomId: room.id,
-      winnerId: xiaoli.id,
-      winAmount: 10,
-      losses: [
-        { playerId: xiaozhang.id, amount: 2 },
-        { playerId: xiaowang.id, amount: 6 },
-        { playerId: principal.id, amount: 2 },
-      ],
-      note: '自摸',
-    })
-    await get().saveOperation({
-      roomId: room.id,
-      winnerId: xiaozhang.id,
-      winAmount: 4,
-      losses: [
-        { playerId: xiaowang.id, amount: 1 },
-        { playerId: xiaoli.id, amount: 1 },
-        { playerId: principal.id, amount: 2 },
-      ],
-      note: '自摸补分',
-    })
     return room
   },
 

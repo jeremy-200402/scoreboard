@@ -51,7 +51,7 @@ a { color: inherit; text-decoration: none; }
 .zero-seal__number { font: 700 54px/1 Georgia, serif; }
 .zero-seal__label { font-size: 11px; letter-spacing: .12em; }
 
-.home-actions { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: stretch; margin-bottom: 52px; }
+.home-actions { display: grid; grid-template-columns: 1fr; gap: 12px; align-items: stretch; margin-bottom: 52px; }
 .button { border: 0; border-radius: 14px; min-height: 48px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; transition: transform .18s ease, background .18s ease, opacity .18s ease; }
 .button:active { transform: translateY(1px); }
 .button:disabled { opacity: .42; cursor: not-allowed; }
@@ -209,7 +209,6 @@ a { color: inherit; text-decoration: none; }
   .hero-note { max-width: 255px; }
   .zero-seal { width: 108px; height: 108px; right: -3px; }
   .zero-seal__number { font-size: 46px; }
-  .home-actions { grid-template-columns: 1fr; }
   .score-grid { gap: 70px 10px; }
   .score-card { padding: 14px 12px 10px; }
   .transfer-sheet { padding-left: 18px; padding-right: 18px; }
