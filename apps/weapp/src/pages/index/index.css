@@ -1,0 +1,98 @@
+.brand-row {
+  height: 112rpx;
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.brand-mark {
+  width: 56rpx;
+  height: 56rpx;
+  padding: 8rpx;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+  color: #fff;
+  background: var(--seal);
+  transform: rotate(-4deg);
+}
+
+.pip-row {
+  height: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: 10rpx;
+  line-height: 1;
+}
+
+.wordmark {
+  color: var(--pine);
+  font-family: monospace;
+  font-size: 24rpx;
+  font-weight: 800;
+  letter-spacing: 5rpx;
+}
+
+.hero {
+  position: relative;
+  min-height: 590rpx;
+  padding-top: 72rpx;
+  box-sizing: border-box;
+}
+
+.hero-copy { position: relative; z-index: 1; }
+
+.hero-title {
+  display: block;
+  margin-top: 20rpx;
+  color: var(--pine-deep);
+  font-family: KaiTi, STKaiti, serif;
+  font-size: 88rpx;
+  font-weight: 800;
+  line-height: 1.13;
+  letter-spacing: -5rpx;
+  white-space: pre-line;
+}
+
+.hero-note {
+  display: block;
+  width: 480rpx;
+  margin-top: 38rpx;
+  color: var(--muted);
+  font-size: 27rpx;
+  line-height: 1.75;
+}
+
+.zero-seal {
+  position: absolute;
+  right: 0;
+  bottom: 12rpx;
+  width: 210rpx;
+  height: 210rpx;
+  border: 2rpx solid rgba(196, 71, 56, .35);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--seal);
+  background: rgba(247, 248, 244, .82);
+  transform: rotate(7deg);
+}
+
+.zero-number { font-family: Georgia, serif; font-size: 88rpx; font-weight: 700; line-height: 1; }
+.zero-label { margin-top: 4rpx; font-size: 20rpx; letter-spacing: 4rpx; }
+
+.room-section { margin-top: 78rpx; }
+.room-list { border-top: 2rpx solid var(--line); }
+.room-row { min-height: 124rpx; border-bottom: 2rpx solid var(--line); display: flex; align-items: center; gap: 20rpx; }
+.room-copy { flex: 1; min-width: 0; }
+.room-name { display: block; color: var(--ink); font-size: 30rpx; font-weight: 800; }
+.room-meta { display: block; margin-top: 9rpx; color: var(--muted); font-size: 21rpx; }
+.room-leader { display: flex; flex-direction: column; align-items: flex-end; color: var(--muted); font-size: 20rpx; }
+.leader-score { margin-top: 4rpx; color: var(--jade); font-family: monospace; font-size: 32rpx; font-weight: 800; }
+.arrow { color: var(--muted); font-size: 42rpx; }
+
+.empty-guide { margin-top: 80rpx; padding: 44rpx 0 20rpx; border-top: 2rpx solid var(--line); }
+.guide-row { height: 74rpx; display: flex; align-items: center; gap: 24rpx; color: var(--muted); font-size: 27rpx; }
+.guide-number { width: 44rpx; height: 44rpx; border: 2rpx solid var(--line); border-radius: 50%; text-align: center; color: var(--pine); font-family: monospace; font-size: 21rpx; font-weight: 800; line-height: 44rpx; }

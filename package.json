@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:weapp": "npm --prefix apps/weapp run dev:weapp",
     "build": "tsc -b && vite build",
+    "build:weapp": "npm --prefix apps/weapp run build:weapp",
+    "typecheck:weapp": "npm --prefix apps/weapp exec tsc -- --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

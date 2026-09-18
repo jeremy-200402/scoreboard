@@ -11,11 +11,32 @@ npm run dev
 
 浏览器打开终端显示的本地地址即可体验。
 
+## 微信小程序
+
+微信小程序源码位于 `apps/weapp`，与现有网页版并存。第一次运行：
+
+```bash
+cd apps/weapp
+npm install
+cd ../..
+npm run dev:weapp
+```
+
+然后在微信开发者工具中选择“导入项目”，项目目录选择 `apps/weapp`。`project.config.json` 已将小程序目录配置为 `dist`；当前使用游客 AppID，发布前请替换为微信公众平台中的正式 AppID。
+
+生产构建：
+
+```bash
+npm run build:weapp
+```
+
 ## 验证
 
 ```bash
 npm test
 npm run build
+npm run typecheck:weapp
+npm run build:weapp
 ```
 
 ## MVP 能力
@@ -27,3 +48,4 @@ npm run build
 - 查看、修改和撤销历史给分流水
 - 结束房间并查看最终排名
 - 使用 IndexedDB 保存本地数据，刷新后可继续
+- 提供 Taro 微信小程序版，使用微信本地缓存保存牌局

@@ -1,0 +1,15 @@
+{
+  "miniprogramRoot": "./dist",
+  "projectname": "scoreboard-weapp",
+  "description": "打牌计分微信小程序",
+  "appid": "touristappid",
+  "setting": {
+    "urlCheck": false,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": true,
+    "postcss": false,
+    "minified": false
+  },
+  "compileType": "miniprogram"
+}

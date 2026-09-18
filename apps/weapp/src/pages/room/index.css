@@ -1,0 +1,44 @@
+.room-page { background: var(--paper-2); padding-top: 48rpx; }
+.room-titlebar { display: flex; align-items: flex-end; justify-content: space-between; gap: 20rpx; }
+.room-title { display: block; margin-top: 12rpx; color: var(--pine-deep); font-family: KaiTi, STKaiti, serif; font-size: 66rpx; font-weight: 800; line-height: 1.08; }
+.text-action { flex: 0 0 auto; padding-bottom: 10rpx; color: var(--jade); font-size: 24rpx; }
+
+.table-scoreboard { position: relative; min-height: 570rpx; margin-top: 42rpx; padding: 28rpx; border-radius: 48rpx; box-sizing: border-box; overflow: hidden; background: var(--pine); box-shadow: 0 24rpx 50rpx rgba(20, 60, 54, .15); }
+.table-scoreboard::after { position: absolute; inset: 20rpx; border: 2rpx dashed rgba(214, 183, 109, .22); border-radius: 34rpx; content: ''; pointer-events: none; }
+.score-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; column-gap: 22rpx; row-gap: 148rpx; }
+.score-card { position: relative; min-height: 150rpx; padding: 25rpx 22rpx; border: 2rpx solid rgba(255, 255, 255, .09); border-radius: 22rpx; box-sizing: border-box; color: #fff; background: rgba(255, 255, 255, .08); }
+.seat { position: absolute; top: 18rpx; right: 18rpx; color: rgba(255, 255, 255, .35); font-family: serif; }
+.player-name { display: block; color: rgba(255, 255, 255, .76); font-size: 25rpx; }
+.player-score { display: block; margin-top: 20rpx; font-family: monospace; font-size: 50rpx; font-weight: 800; line-height: 1; }
+.player-score.positive { color: #94dfbb; }
+.player-score.negative { color: #f4a39a; }
+.table-center { position: absolute; left: 50%; top: 50%; z-index: 2; width: 176rpx; height: 176rpx; border: 2rpx solid rgba(214, 183, 109, .42); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; background: var(--pine-deep); transform: translate(-50%, -50%) rotate(-2deg); }
+.center-label, .center-status { color: var(--brass); font-size: 18rpx; letter-spacing: 3rpx; }
+.center-score { margin: 2rpx 0; font-family: Georgia, serif; font-size: 58rpx; font-weight: 700; line-height: 1; }
+
+.deal-button { min-height: 116rpx; margin-top: 38rpx; padding: 20rpx 24rpx; border-radius: 28rpx; display: flex; align-items: center; gap: 22rpx; box-sizing: border-box; color: #fff; background: var(--seal); box-shadow: 0 16rpx 36rpx rgba(196, 71, 56, .18); }
+.deal-mark { width: 76rpx; height: 76rpx; border-radius: 20rpx; text-align: center; background: rgba(255, 255, 255, .14); font-family: KaiTi, STKaiti, serif; font-size: 39rpx; font-weight: 800; line-height: 76rpx; }
+.deal-copy { flex: 1; }
+.deal-copy text { display: block; font-size: 30rpx; font-weight: 800; }
+.deal-copy text:last-child { margin-top: 6rpx; opacity: .72; font-size: 21rpx; font-weight: 400; }
+.deal-arrow { font-size: 34rpx; }
+
+.ledger-section { margin-top: 68rpx; }
+.ledger-list { border-top: 2rpx solid var(--line); }
+.ledger-row { padding: 30rpx 0; border-bottom: 2rpx solid var(--line); display: flex; gap: 20rpx; }
+.ledger-row.is-voided { opacity: .45; }
+.winner-stamp { flex: 0 0 auto; width: 66rpx; height: 66rpx; border-radius: 18rpx; text-align: center; color: var(--jade); background: var(--mint); font-size: 28rpx; font-weight: 800; line-height: 66rpx; }
+.ledger-content { flex: 1; min-width: 0; }
+.ledger-line { display: flex; align-items: baseline; justify-content: space-between; gap: 16rpx; color: var(--ink); font-size: 25rpx; }
+.winner-name { font-weight: 800; }
+.win-score { color: var(--seal); font-weight: 800; }
+.ledger-time { flex: 0 0 auto; color: var(--muted); font-size: 18rpx; }
+.loss-detail { display: block; margin-top: 12rpx; color: var(--jade); font-size: 23rpx; font-weight: 700; }
+.operation-note { display: block; margin-top: 12rpx; color: var(--muted); font-size: 21rpx; }
+.ledger-actions { margin-top: 16rpx; display: flex; gap: 30rpx; color: var(--muted); font-size: 22rpx; }
+.ledger-actions text:last-child, .void-label { color: var(--seal); }
+.void-label { display: block; margin-top: 14rpx; font-size: 20rpx; font-weight: 800; }
+.empty-ledger { padding: 64rpx 0; text-align: center; color: var(--ink); }
+.empty-ledger text { display: block; font-size: 27rpx; font-weight: 700; }
+.empty-ledger text:last-child { margin-top: 10rpx; color: var(--muted); font-size: 21rpx; font-weight: 400; }
+.end-room { display: block; width: 240rpx; margin: 60rpx auto 20rpx; padding: 24rpx; border-radius: 22rpx; text-align: center; color: var(--seal); background: rgba(196, 71, 56, .08); font-size: 24rpx; font-weight: 700; }

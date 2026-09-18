@@ -1,0 +1,26 @@
+.record-page { padding-top: 58rpx; padding-bottom: calc(46rpx + env(safe-area-inset-bottom)); }
+.record-page .page-title { margin-top: 16rpx; }
+.record-page .page-lead { margin-bottom: 40rpx; }
+.winner-tabs { display: flex; gap: 14rpx; overflow-x: auto; padding: 6rpx 0 34rpx; white-space: nowrap; }
+.winner-tab { flex: 0 0 auto; min-width: 118rpx; height: 72rpx; padding: 0 22rpx; border: 2rpx solid var(--line); border-radius: 999rpx; box-sizing: border-box; text-align: center; color: var(--muted); font-size: 25rpx; line-height: 70rpx; }
+.winner-tab.is-active { border-color: var(--pine); color: #fff; background: var(--pine); }
+.input-caption { display: block; margin-bottom: 14rpx; color: var(--muted); font-size: 22rpx; }
+.entry-list { border-top: 2rpx solid var(--line); }
+.entry-row { min-height: 112rpx; border-bottom: 2rpx solid var(--line); display: flex; align-items: center; gap: 14rpx; }
+.entry-row.winner-row { min-height: 112rpx; margin: 16rpx 0 8rpx; padding: 0 22rpx; border: 0; border-radius: 22rpx; box-sizing: border-box; color: #fff; background: var(--pine); }
+.entry-row.auto-row { margin: 8rpx 0; padding: 0 22rpx; border: 2rpx dashed rgba(47, 118, 103, .45); border-radius: 22rpx; box-sizing: border-box; background: var(--mint); }
+.entry-player { flex: 1; display: flex; align-items: baseline; gap: 16rpx; }
+.entry-player text:first-child { font-size: 29rpx; font-weight: 800; }
+.entry-player text:last-child { color: var(--muted); font-size: 20rpx; }
+.winner-row .entry-player text:last-child { color: rgba(255, 255, 255, .62); }
+.entry-sign { color: #94dfbb; font-family: monospace; font-size: 41rpx; font-weight: 800; }
+.entry-sign.loss-sign { color: var(--seal); }
+.score-input { width: 128rpx; height: 76rpx; border: 2rpx solid var(--line); border-radius: 17rpx; box-sizing: border-box; text-align: center; color: var(--pine-deep); background: #fff; font-family: monospace; font-size: 39rpx; font-weight: 800; }
+.winner-row .score-input { border-color: rgba(255, 255, 255, .18); color: #fff; background: rgba(255, 255, 255, .11); }
+.auto-row .score-input { border-color: transparent; background: rgba(255, 255, 255, .62); }
+.balance-strip { min-height: 82rpx; margin-top: 22rpx; padding: 0 24rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; color: var(--seal); background: rgba(196, 71, 56, .08); font-size: 22rpx; font-weight: 800; }
+.balance-strip.is-balanced { color: var(--jade); background: var(--mint); }
+.balance-strip text:last-child { font-family: monospace; }
+.note-field { margin: 44rpx 0 30rpx; color: var(--ink); font-size: 26rpx; font-weight: 800; }
+.note-field .text-input { margin-top: 16rpx; }
+.button-score { margin-left: auto; opacity: .72; font-family: monospace; }
