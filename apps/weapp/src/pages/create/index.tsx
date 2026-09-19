@@ -16,7 +16,7 @@ export default function CreateRoomPage() {
 
   const goBack = () => Taro.getCurrentPages().length > 1
     ? Taro.navigateBack()
-    : Taro.reLaunch({ url: '/pages/index/index' })
+    : Taro.reLaunch({ url: '/pages/home/index' })
 
   const updatePlayer = (index: number, value: string) => {
     setPlayers((items) => items.map((item, itemIndex) => itemIndex === index ? value : item))

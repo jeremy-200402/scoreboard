@@ -21,7 +21,7 @@ export default function RoomPage() {
 
   const goBack = () => Taro.getCurrentPages().length > 1
     ? Taro.navigateBack()
-    : Taro.reLaunch({ url: '/pages/index/index' })
+    : Taro.reLaunch({ url: '/pages/home/index' })
 
   const refresh = async () => {
     const [rooms, allOperations] = await Promise.all([

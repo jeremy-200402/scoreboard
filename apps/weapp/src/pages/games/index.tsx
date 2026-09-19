@@ -127,7 +127,7 @@ export default function GamesPage() {
       </View>
 
       <View className='bottom-nav'>
-        <View className='nav-item' onClick={() => void Taro.redirectTo({ url: '/pages/index/index' })}><View className='nav-icon'>⌂</View><Text>首页</Text></View>
+        <View className='nav-item' onClick={() => void Taro.redirectTo({ url: '/pages/home/index' })}><View className='nav-icon'>⌂</View><Text>首页</Text></View>
         <View className='nav-item nav-active'><View className='nav-icon'>▱</View><Text>牌局</Text></View>
         <View className='nav-create' onClick={() => void openCreate()}><Text>＋</Text></View>
         <View className='nav-item' onClick={() => void showComingSoon('统计')}><View className='nav-icon'>▥</View><Text>统计</Text></View>

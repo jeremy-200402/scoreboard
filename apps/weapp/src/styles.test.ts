@@ -19,10 +19,13 @@ describe('WeChat mini program styles', () => {
   })
 
   it('keeps the home dashboard structure and custom navigation treatment', () => {
+    const appConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/app.config.ts'), 'utf8')
     const page = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.tsx'), 'utf8')
     const styles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.css'), 'utf8')
     const pageConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.config.ts'), 'utf8')
 
+    expect(appConfig).toContain("'pages/home/index'")
+    expect(appConfig).not.toContain("'pages/index/index'")
     expect(page).toContain("className='month-card'")
     expect(page).toContain("className='quick-grid'")
     expect(page).toContain("className='bottom-nav'")
@@ -55,7 +58,7 @@ describe('WeChat mini program styles', () => {
 
     expect(createPage).toContain("className='create-hero'")
     expect(createPage).toContain('getMenuButtonBoundingClientRect')
-    expect(createPage).toContain("Taro.reLaunch({ url: '/pages/index/index' })")
+    expect(createPage).toContain("Taro.reLaunch({ url: '/pages/home/index' })")
     expect(createStyles).toContain('.hero-tile')
     expect(roomPage).toContain("className='table-scoreboard'")
     expect(roomPage).toContain('getMenuButtonBoundingClientRect')
