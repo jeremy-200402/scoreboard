@@ -16,6 +16,12 @@ export default function RoomPage() {
   const [operations, setOperations] = useState<WinnerOperation[]>([])
   const [loading, setLoading] = useState(true)
   const [showAll, setShowAll] = useState(false)
+  const menuButton = Taro.getMenuButtonBoundingClientRect()
+  const navigationStyle = { paddingTop: `${menuButton.top}px`, height: `${menuButton.bottom + 8}px` }
+
+  const goBack = () => Taro.getCurrentPages().length > 1
+    ? Taro.navigateBack()
+    : Taro.reLaunch({ url: '/pages/index/index' })
 
   const refresh = async () => {
     const [rooms, allOperations] = await Promise.all([
@@ -53,8 +59,8 @@ export default function RoomPage() {
   return (
     <View className='room-shell'>
       <View className='subpage-ribbon' />
-      <View className='subpage-nav'>
-        <View className='back-button' onClick={() => void Taro.navigateBack()}><Text>‹</Text></View>
+      <View className='subpage-nav' style={navigationStyle}>
+        <View className='back-button' onClick={() => void goBack()}><Text>‹</Text></View>
         <Text className='subpage-nav-title'>牌局详情</Text>
         <View className='nav-placeholder' />
       </View>

@@ -11,6 +11,12 @@ export default function CreateRoomPage() {
   const [players, setPlayers] = useState(['小张', '小王', '小李', '校长'])
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const menuButton = Taro.getMenuButtonBoundingClientRect()
+  const navigationStyle = { paddingTop: `${menuButton.top}px`, height: `${menuButton.bottom + 8}px` }
+
+  const goBack = () => Taro.getCurrentPages().length > 1
+    ? Taro.navigateBack()
+    : Taro.reLaunch({ url: '/pages/index/index' })
 
   const updatePlayer = (index: number, value: string) => {
     setPlayers((items) => items.map((item, itemIndex) => itemIndex === index ? value : item))
@@ -50,8 +56,8 @@ export default function CreateRoomPage() {
   return (
     <View className='create-shell'>
       <View className='subpage-ribbon' />
-      <View className='subpage-nav'>
-        <View className='back-button' onClick={() => void Taro.navigateBack()}><Text>‹</Text></View>
+      <View className='subpage-nav' style={navigationStyle}>
+        <View className='back-button' onClick={() => void goBack()}><Text>‹</Text></View>
         <Text className='subpage-nav-title'>创建牌局</Text>
         <View className='nav-placeholder' />
       </View>

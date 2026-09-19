@@ -38,8 +38,11 @@ describe('WeChat mini program styles', () => {
     const roomConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/room/index.config.ts'), 'utf8')
 
     expect(createPage).toContain("className='create-hero'")
+    expect(createPage).toContain('getMenuButtonBoundingClientRect')
+    expect(createPage).toContain("Taro.reLaunch({ url: '/pages/index/index' })")
     expect(createStyles).toContain('.hero-tile')
     expect(roomPage).toContain("className='table-scoreboard'")
+    expect(roomPage).toContain('getMenuButtonBoundingClientRect')
     expect(roomStyles).toContain('.empty-ledger-tile')
     expect(createConfig).toContain("navigationStyle: 'custom'")
     expect(roomConfig).toContain("navigationStyle: 'custom'")
