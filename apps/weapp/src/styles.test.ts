@@ -15,6 +15,7 @@ describe('WeChat mini program styles', () => {
 
     expect(config.miniprogramRoot).toBe('dist/')
     expect(config.compileType).toBe('miniprogram')
+    expect(config.setting.compileHotReLoad).toBe(false)
   })
 
   it('keeps the home dashboard structure and custom navigation treatment', () => {
