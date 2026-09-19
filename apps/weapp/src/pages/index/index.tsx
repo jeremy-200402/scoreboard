@@ -2,22 +2,13 @@ import { useMemo, useState } from 'react'
 import { Text, View } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import type { Room, WinnerOperation } from '../../domain/models'
-import { calculateScores, scoreLabel } from '../../domain/score'
 import { scoreboardRepository } from '../../infrastructure/storage'
 import './index.css'
-
-const tileMarks = ['一', '發', '中', '北']
-const avatarColors = ['mint', 'amber', 'rose', 'sky']
 
 const isThisMonth = (value: string) => {
   const date = new Date(value)
   const current = new Date()
   return date.getFullYear() === current.getFullYear() && date.getMonth() === current.getMonth()
-}
-
-const formatRoomDate = (value: string) => {
-  const date = new Date(value)
-  return `${date.getMonth() + 1}月${date.getDate()}日`
 }
 
 export default function Index() {
@@ -42,7 +33,6 @@ export default function Index() {
   const activeRooms = rooms.filter((room) => room.status === 'active')
   const endedRooms = rooms.filter((room) => room.status === 'ended')
   const currentRoom = activeRooms[0]
-  const recentRooms = [...rooms].slice(0, 4)
   const monthLabel = `${new Date().getMonth() + 1}月`
 
   const openCreate = () => Taro.navigateTo({ url: '/pages/create/index' })
@@ -51,11 +41,6 @@ export default function Index() {
     ? Taro.navigateTo({ url: `/pages/record/index?roomId=${currentRoom.id}` })
     : openCreate()
   const showComingSoon = (title: string) => Taro.showToast({ title: `${title}正在准备中`, icon: 'none' })
-
-  const roomScore = (room: Room) => {
-    const scores = calculateScores(room, activeOperations.filter((operation) => operation.roomId === room.id))
-    return [...scores].sort((left, right) => right.score - left.score)[0]?.score ?? 0
-  }
 
   return (
     <View className='home-shell'>
@@ -132,46 +117,11 @@ export default function Index() {
           </View>
         </View>
 
-        <View className='section-block recent-section'>
-          <View className='recent-heading'>
-            <View className='section-label'><Text className='label-bar amber-bar' /><Text>最近牌局</Text></View>
-            <Text className='view-all' onClick={() => void showComingSoon('全部牌局')}>查看全部 ›</Text>
-          </View>
-
-          {loading ? (
-            <View className='rooms-empty'><Text>正在整理牌桌…</Text></View>
-          ) : recentRooms.length === 0 ? (
-            <View className='rooms-empty' onClick={() => void openCreate()}>
-              <View className='empty-tile'><Text>東</Text></View>
-              <View><Text className='empty-title'>第一场牌局，从这里开始</Text><Text className='empty-note'>创建牌局后，最近战绩会自动出现在这里</Text></View>
-            </View>
-          ) : (
-            <View className='room-stack'>
-              {recentRooms.map((room, index) => {
-                const score = roomScore(room)
-                return (
-                  <View className={`recent-room ${room.status === 'ended' ? 'room-ended' : ''}`} key={room.id} onClick={() => void openRoom(room.id)}>
-                    <View className={`mahjong-tile room-tile room-tile-${index % 4}`}><Text>{tileMarks[index % tileMarks.length]}</Text></View>
-                    <View className='recent-copy'>
-                      <View className='recent-title-line'><Text className='recent-name'>{room.name}</Text><Text className={`recent-score ${score < 0 ? 'score-negative' : ''}`}>{scoreLabel(score)}</Text></View>
-                      <Text className='recent-meta'>{formatRoomDate(room.createdAt)} · {room.players.length}人 · {room.status === 'active' ? '进行中' : '已结束'}</Text>
-                    </View>
-                    <View className='avatar-stack'>
-                      {room.players.slice(0, 3).map((player, playerIndex) => (
-                        <View className={`player-avatar avatar-${avatarColors[playerIndex % avatarColors.length]}`} key={player.id}><Text>{player.name.slice(0, 1)}</Text></View>
-                      ))}
-                    </View>
-                  </View>
-                )
-              })}
-            </View>
-          )}
-        </View>
       </View>
 
       <View className='bottom-nav'>
         <View className='nav-item nav-active'><View className='nav-icon'>⌂</View><Text>首页</Text></View>
-        <View className='nav-item' onClick={() => void showComingSoon('牌局中心')}><View className='nav-icon'>▱</View><Text>牌局</Text></View>
+        <View className='nav-item' onClick={() => void Taro.redirectTo({ url: '/pages/games/index' })}><View className='nav-icon'>▱</View><Text>牌局</Text></View>
         <View className='nav-create' onClick={() => void openCreate()}><Text>＋</Text></View>
         <View className='nav-item' onClick={() => void showComingSoon('统计')}><View className='nav-icon'>▥</View><Text>统计</Text></View>
         <View className='nav-item' onClick={() => void showComingSoon('个人中心')}><View className='nav-icon'>♙</View><Text>我的</Text></View>

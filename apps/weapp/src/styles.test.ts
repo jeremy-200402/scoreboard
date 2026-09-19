@@ -25,8 +25,22 @@ describe('WeChat mini program styles', () => {
     expect(page).toContain("className='month-card'")
     expect(page).toContain("className='quick-grid'")
     expect(page).toContain("className='bottom-nav'")
+    expect(page).not.toContain('最近牌局')
     expect(styles).toContain('.mahjong-tile')
     expect(pageConfig).toContain("navigationStyle: 'custom'")
+  })
+
+  it('shows every saved room on the dedicated games page', () => {
+    const appConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/app.config.ts'), 'utf8')
+    const gamesPage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/games/index.tsx'), 'utf8')
+    const gamesStyles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/games/index.css'), 'utf8')
+
+    expect(appConfig).toContain("'pages/games/index'")
+    expect(gamesPage).toContain("scoreboardRepository.listRooms()")
+    expect(gamesPage).toContain("['all', '全部']")
+    expect(gamesPage).toContain("['active', '进行中']")
+    expect(gamesPage).toContain("['ended', '已结束']")
+    expect(gamesStyles).toContain('.all-room-stack')
   })
 
   it('keeps create and room pages in the shared mahjong visual system', () => {
