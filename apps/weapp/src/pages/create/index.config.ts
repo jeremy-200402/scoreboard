@@ -1,3 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '创建牌局'
+  navigationStyle: 'custom',
+  backgroundColor: '#fafaf9',
+  backgroundTextStyle: 'dark',
 })

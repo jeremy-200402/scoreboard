@@ -47,82 +47,91 @@ export default function RoomPage() {
     await refresh()
   }
 
-  if (loading) return <View className='loading-state'>正在摆好记分牌…</View>
-  if (!room) return <View className='loading-state'>没有找到这场牌局</View>
+  if (loading) return <View className='room-shell'><View className='subpage-ribbon' /><View className='room-loading'>正在摆好记分牌…</View></View>
+  if (!room) return <View className='room-shell'><View className='subpage-ribbon' /><View className='room-loading'>没有找到这场牌局</View></View>
 
   return (
-    <View className='page room-page'>
-      <View className='room-titlebar'>
-        <View>
-          <Text className='eyebrow'>{room.status === 'active' ? '进行中' : '已结束'} · {activeOperations.length} 局记录</Text>
-          <Text className='room-title'>{room.name}</Text>
-        </View>
-        <Text className='text-action' onClick={() => setShowAll((value) => !value)}>{showAll ? '收起流水' : '全部流水'}</Text>
+    <View className='room-shell'>
+      <View className='subpage-ribbon' />
+      <View className='subpage-nav'>
+        <View className='back-button' onClick={() => void Taro.navigateBack()}><Text>‹</Text></View>
+        <Text className='subpage-nav-title'>牌局详情</Text>
+        <View className='nav-placeholder' />
       </View>
 
-      <View className='table-scoreboard'>
-        <View className='table-center'>
-          <Text className='center-label'>牌桌总分</Text>
-          <Text className='center-score'>{scores.reduce((sum, player) => sum + player.score, 0)}</Text>
-          <Text className='center-status'>{assertZeroSum(scores) ? '账目已平' : '需要核对'}</Text>
+      <View className='page room-page'>
+        <View className='room-titlebar'>
+          <View>
+            <Text className='eyebrow'>{room.status === 'active' ? '进行中' : '已结束'} · {activeOperations.length} 局记录</Text>
+            <Text className='room-title'>{room.name}</Text>
+          </View>
+          <Text className='text-action' onClick={() => setShowAll((value) => !value)}>{showAll ? '收起流水' : '全部流水'}</Text>
         </View>
-        <View className='score-grid'>
-          {scores.map((player, index) => (
-            <View className='score-card' key={player.id}>
-              <Text className='seat'>{seats[index]}</Text>
-              <Text className='player-name'>{player.name}</Text>
-              <Text className={`player-score ${player.score > 0 ? 'positive' : player.score < 0 ? 'negative' : ''}`}>{scoreLabel(player.score)}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
 
-      {room.status === 'active' && (
-        <View className='deal-button' onClick={() => void Taro.navigateTo({ url: `/pages/record/index?roomId=${room.id}` })}>
-          <Text className='deal-mark'>记</Text>
-          <View className='deal-copy'><Text>记录本局</Text><Text>选赢家，填写每人输赢</Text></View>
-          <Text className='deal-arrow'>→</Text>
+        <View className='table-scoreboard'>
+          <View className='table-center'>
+            <Text className='center-label'>牌桌总分</Text>
+            <Text className='center-score'>{scores.reduce((sum, player) => sum + player.score, 0)}</Text>
+            <Text className='center-status'>{assertZeroSum(scores) ? '账目已平' : '需要核对'}</Text>
+          </View>
+          <View className='score-grid'>
+            {scores.map((player, index) => (
+              <View className='score-card' key={player.id}>
+                <Text className='seat'>{seats[index]}</Text>
+                <Text className='player-name'>{player.name}</Text>
+                <Text className={`player-score ${player.score > 0 ? 'positive' : player.score < 0 ? 'negative' : ''}`}>{scoreLabel(player.score)}</Text>
+              </View>
+            ))}
+          </View>
         </View>
-      )}
 
-      <View className='ledger-section'>
-        <View className='section-heading'>
-          <Text className='section-title'>{room.status === 'ended' ? '完整流水' : '最近流水'}</Text>
-          <Text className='section-count'>总分始终为 0</Text>
-        </View>
-        {operations.length === 0 ? (
-          <View className='empty-ledger'><Text>还没有本局记录</Text><Text>第一局结果会出现在这里</Text></View>
-        ) : (
-          <View className='ledger-list'>
-            {(showAll ? operations : operations.slice(0, 4)).map((operation) => {
-              const winner = room.players.find((player) => player.id === operation.winnerId)
-              return (
-                <View className={`ledger-row ${operation.status === 'voided' ? 'is-voided' : ''}`} key={operation.id}>
-                  <View className='winner-stamp'><Text>{winner?.name.slice(0, 1)}</Text></View>
-                  <View className='ledger-content'>
-                    <View className='ledger-line'>
-                      <Text><Text className='winner-name'>{winner?.name}</Text> 赢得 <Text className='win-score'>{operation.winAmount}</Text> 分</Text>
-                      <Text className='ledger-time'>{formatDate(operation.createdAt)}</Text>
-                    </View>
-                    <Text className='loss-detail'>{operation.losses.map((loss) => `${room.players.find((player) => player.id === loss.playerId)?.name} −${loss.amount}`).join(' · ')}</Text>
-                    {operation.note && <Text className='operation-note'>“{operation.note}”</Text>}
-                    {operation.status === 'voided' ? (
-                      <Text className='void-label'>已撤销</Text>
-                    ) : room.status === 'active' && (
-                      <View className='ledger-actions'>
-                        <Text onClick={() => void Taro.navigateTo({ url: `/pages/record/index?roomId=${room.id}&operationId=${operation.id}` })}>修改</Text>
-                        <Text onClick={() => void voidOperation(operation)}>撤销</Text>
-                      </View>
-                    )}
-                  </View>
-                </View>
-              )
-            })}
+        {room.status === 'active' && (
+          <View className='deal-button' onClick={() => void Taro.navigateTo({ url: `/pages/record/index?roomId=${room.id}` })}>
+            <Text className='deal-mark'>记</Text>
+            <View className='deal-copy'><Text>记录本局</Text><Text>选赢家，填写每人输赢</Text></View>
+            <Text className='deal-arrow'>→</Text>
           </View>
         )}
-      </View>
 
-      {room.status === 'active' && <Text className='end-room' onClick={() => void endRoom()}>结束这场牌局</Text>}
+        <View className='ledger-section'>
+          <View className='section-heading'>
+            <Text className='section-title'>{room.status === 'ended' ? '完整流水' : '最近流水'}</Text>
+            <Text className='section-count'>总分始终为 0</Text>
+          </View>
+          {operations.length === 0 ? (
+            <View className='empty-ledger'><View className='empty-ledger-tile'><Text>記</Text></View><Text>还没有本局记录</Text><Text>第一局结果会出现在这里</Text></View>
+          ) : (
+            <View className='ledger-list'>
+              {(showAll ? operations : operations.slice(0, 4)).map((operation) => {
+                const winner = room.players.find((player) => player.id === operation.winnerId)
+                return (
+                  <View className={`ledger-row ${operation.status === 'voided' ? 'is-voided' : ''}`} key={operation.id}>
+                    <View className='winner-stamp'><Text>{winner?.name.slice(0, 1)}</Text></View>
+                    <View className='ledger-content'>
+                      <View className='ledger-line'>
+                        <Text><Text className='winner-name'>{winner?.name}</Text> 赢得 <Text className='win-score'>{operation.winAmount}</Text> 分</Text>
+                        <Text className='ledger-time'>{formatDate(operation.createdAt)}</Text>
+                      </View>
+                      <Text className='loss-detail'>{operation.losses.map((loss) => `${room.players.find((player) => player.id === loss.playerId)?.name} −${loss.amount}`).join(' · ')}</Text>
+                      {operation.note && <Text className='operation-note'>“{operation.note}”</Text>}
+                      {operation.status === 'voided' ? (
+                        <Text className='void-label'>已撤销</Text>
+                      ) : room.status === 'active' && (
+                        <View className='ledger-actions'>
+                          <Text onClick={() => void Taro.navigateTo({ url: `/pages/record/index?roomId=${room.id}&operationId=${operation.id}` })}>修改</Text>
+                          <Text onClick={() => void voidOperation(operation)}>撤销</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )
+              })}
+            </View>
+          )}
+        </View>
+
+        {room.status === 'active' && <Text className='end-room' onClick={() => void endRoom()}>结束这场牌局</Text>}
+      </View>
     </View>
   )
 }

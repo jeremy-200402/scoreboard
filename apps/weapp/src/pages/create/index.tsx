@@ -48,51 +48,66 @@ export default function CreateRoomPage() {
   }
 
   return (
-    <View className='page create-page'>
-      <Text className='eyebrow'>新牌局</Text>
-      <Text className='page-title'>谁上桌？</Text>
-      <Text className='page-lead'>所有人从 0 分开始，每局选择一位赢家，系统自动核对输赢平衡。</Text>
-
-      <View className='field'>
-        <Text className='field-label'>牌局名称 <Text className='optional'>可选</Text></Text>
-        <Input
-          className='text-input'
-          value={roomName}
-          maxlength={24}
-          placeholder='例如：周五麻将局'
-          onInput={(event) => setRoomName(event.detail.value)}
-        />
+    <View className='create-shell'>
+      <View className='subpage-ribbon' />
+      <View className='subpage-nav'>
+        <View className='back-button' onClick={() => void Taro.navigateBack()}><Text>‹</Text></View>
+        <Text className='subpage-nav-title'>创建牌局</Text>
+        <View className='nav-placeholder' />
       </View>
 
-      <View className='field-group'>
-        <View className='field-heading'>
-          <Text>玩家</Text><Text className='optional'>{players.length}/8</Text>
+      <View className='page create-page'>
+        <View className='create-hero'>
+          <View className='hero-tile'><Text>東</Text></View>
+          <View className='hero-copy'>
+            <Text className='eyebrow'>新牌局</Text>
+            <Text className='page-title'>谁上桌？</Text>
+            <Text className='page-lead'>所有人从 0 分开始，每局选出赢家，系统自动核对输赢。</Text>
+          </View>
         </View>
-        <View className='player-list'>
-          {players.map((player, index) => (
-            <View className='player-row' key={`${index}-${players.length}`}>
-              <Text className='seat-number'>{String(index + 1).padStart(2, '0')}</Text>
-              <Input
-                className='player-input'
-                value={player}
-                maxlength={10}
-                placeholder={`玩家 ${index + 1}`}
-                onInput={(event) => updatePlayer(index, event.detail.value)}
-              />
-              {players.length > 2 && (
-                <Text className='remove-player' onClick={() => setPlayers((items) => items.filter((_, itemIndex) => itemIndex !== index))}>×</Text>
-              )}
-            </View>
-          ))}
-        </View>
-        {players.length < 8 && (
-          <Text className='add-player' onClick={() => setPlayers((items) => [...items, ''])}>＋ 添加玩家</Text>
-        )}
-      </View>
 
-      {error && <Text className='form-error'>{error}</Text>}
-      <View className={`primary-button ${saving ? 'is-disabled' : ''}`} onClick={() => !saving && void createRoom()}>
-        <Text>{saving ? '正在创建…' : '创建并开始'}</Text><Text className='button-arrow'>→</Text>
+        <View className='field'>
+          <Text className='field-label'>牌局名称 <Text className='optional'>可选</Text></Text>
+          <Input
+            className='text-input'
+            value={roomName}
+            maxlength={24}
+            placeholder='例如：周五麻将局'
+            onInput={(event) => setRoomName(event.detail.value)}
+          />
+        </View>
+
+        <View className='field-group'>
+          <View className='field-heading'>
+            <Text>玩家</Text><Text className='optional'>{players.length}/8</Text>
+          </View>
+          <View className='player-list'>
+            {players.map((player, index) => (
+              <View className='player-row' key={`${index}-${players.length}`}>
+                <Text className={`seat-number seat-${index % 4}`}>{['東', '南', '西', '北', '五', '六', '七', '八'][index]}</Text>
+                <Input
+                  className='player-input'
+                  value={player}
+                  maxlength={10}
+                  placeholder={`玩家 ${index + 1}`}
+                  onInput={(event) => updatePlayer(index, event.detail.value)}
+                />
+                {players.length > 2 && (
+                  <Text className='remove-player' onClick={() => setPlayers((items) => items.filter((_, itemIndex) => itemIndex !== index))}>×</Text>
+                )}
+              </View>
+            ))}
+          </View>
+          {players.length < 8 && (
+            <Text className='add-player' onClick={() => setPlayers((items) => [...items, ''])}>＋ 添加玩家</Text>
+          )}
+        </View>
+
+        {error && <Text className='form-error'>{error}</Text>}
+        <View className={`primary-button ${saving ? 'is-disabled' : ''}`} onClick={() => !saving && void createRoom()}>
+          <Text>{saving ? '正在创建…' : '创建并开始'}</Text><Text className='button-arrow'>→</Text>
+        </View>
+        <Text className='create-hint'>牌局创建后，所有记录只保存在你的小程序中</Text>
       </View>
     </View>
   )

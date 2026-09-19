@@ -28,4 +28,20 @@ describe('WeChat mini program styles', () => {
     expect(styles).toContain('.mahjong-tile')
     expect(pageConfig).toContain("navigationStyle: 'custom'")
   })
+
+  it('keeps create and room pages in the shared mahjong visual system', () => {
+    const createPage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/create/index.tsx'), 'utf8')
+    const createStyles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/create/index.css'), 'utf8')
+    const createConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/create/index.config.ts'), 'utf8')
+    const roomPage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/room/index.tsx'), 'utf8')
+    const roomStyles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/room/index.css'), 'utf8')
+    const roomConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/room/index.config.ts'), 'utf8')
+
+    expect(createPage).toContain("className='create-hero'")
+    expect(createStyles).toContain('.hero-tile')
+    expect(roomPage).toContain("className='table-scoreboard'")
+    expect(roomStyles).toContain('.empty-ledger-tile')
+    expect(createConfig).toContain("navigationStyle: 'custom'")
+    expect(roomConfig).toContain("navigationStyle: 'custom'")
+  })
 })
