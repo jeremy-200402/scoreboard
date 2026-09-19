@@ -16,4 +16,16 @@ describe('WeChat mini program styles', () => {
     expect(config.miniprogramRoot).toBe('dist/')
     expect(config.compileType).toBe('miniprogram')
   })
+
+  it('keeps the home dashboard structure and custom navigation treatment', () => {
+    const page = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.tsx'), 'utf8')
+    const styles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.css'), 'utf8')
+    const pageConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.config.ts'), 'utf8')
+
+    expect(page).toContain("className='month-card'")
+    expect(page).toContain("className='quick-grid'")
+    expect(page).toContain("className='bottom-nav'")
+    expect(styles).toContain('.mahjong-tile')
+    expect(pageConfig).toContain("navigationStyle: 'custom'")
+  })
 })

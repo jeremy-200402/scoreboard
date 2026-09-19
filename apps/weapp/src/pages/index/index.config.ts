@@ -1,3 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '打牌计分'
+  navigationStyle: 'custom',
+  backgroundColor: '#fafaf9',
+  backgroundTextStyle: 'dark',
 })
