@@ -1,40 +1,19 @@
 {
-  "name": "scoreboard-mvp",
+  "name": "scoreboard-weapp",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm --prefix apps/weapp run dev:weapp",
     "dev:weapp": "npm --prefix apps/weapp run dev:weapp",
-    "build": "tsc -b && vite build",
+    "build": "npm --prefix apps/weapp run build:weapp",
     "build:weapp": "npm --prefix apps/weapp run build:weapp",
-    "typecheck:weapp": "npm --prefix apps/weapp exec tsc -- --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "coverage": "vitest run --coverage"
-  },
-  "dependencies": {
-    "dexie": "^4.2.1",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.1",
-    "zod": "^4.1.9",
-    "zustand": "^5.0.8"
+    "typecheck": "npm --prefix apps/weapp exec -- tsc --noEmit --project apps/weapp/tsconfig.json",
+    "typecheck:weapp": "npm --prefix apps/weapp exec -- tsc --noEmit --project apps/weapp/tsconfig.json",
+    "test": "vitest run apps/weapp/src",
+    "test:watch": "vitest apps/weapp/src"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^24.5.2",
-    "@types/react": "^19.1.13",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.3",
-    "fake-indexeddb": "^6.2.2",
-    "jsdom": "^27.0.0",
-    "typescript": "~5.9.2",
-    "vite": "^7.1.7",
     "vitest": "^3.2.4"
   }
 }

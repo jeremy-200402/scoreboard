@@ -2,10 +2,5 @@ node_modules/
 dist/
 coverage/
 .tmp/
-.vite/
-playwright-report/
-test-results/
 *.local
 *.tsbuildinfo
-vite.config.js
-vite.config.d.ts
