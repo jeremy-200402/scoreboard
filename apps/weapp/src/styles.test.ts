@@ -27,6 +27,7 @@ describe('WeChat mini program styles', () => {
     expect(page).toContain("className='quick-grid'")
     expect(page).toContain("className='bottom-nav'")
     expect(page).not.toContain('最近牌局')
+    expect(page).not.toContain('快速记账')
     expect(styles).toContain('.mahjong-tile')
     expect(pageConfig).toContain("navigationStyle: 'custom'")
   })

@@ -37,9 +37,6 @@ export default function Index() {
 
   const openCreate = () => Taro.navigateTo({ url: '/pages/create/index' })
   const openRoom = (roomId: string) => Taro.navigateTo({ url: `/pages/room/index?roomId=${roomId}` })
-  const quickRecord = () => currentRoom
-    ? Taro.navigateTo({ url: `/pages/record/index?roomId=${currentRoom.id}` })
-    : openCreate()
   const showComingSoon = (title: string) => Taro.showToast({ title: `${title}正在准备中`, icon: 'none' })
 
   return (
@@ -104,9 +101,6 @@ export default function Index() {
           <View className='quick-grid'>
             <View className='quick-item' onClick={() => void openCreate()}>
               <View className='mahjong-tile quick-tile quick-mint'><Text className='quick-symbol'>＋</Text></View><Text>新建牌局</Text>
-            </View>
-            <View className='quick-item' onClick={() => void quickRecord()}>
-              <View className='mahjong-tile quick-tile quick-amber'><Text className='quick-symbol note-symbol'>▤</Text></View><Text>快速记账</Text>
             </View>
             <View className='quick-item' onClick={() => void showComingSoon('战绩统计')}>
               <View className='mahjong-tile quick-tile quick-sky'><Text className='quick-symbol chart-symbol'>⌁</Text></View><Text>战绩统计</Text>

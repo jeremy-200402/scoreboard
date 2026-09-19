@@ -52,15 +52,13 @@
 .label-bar { width: 7rpx; height: 30rpx; border-radius: 8rpx; }
 .mint-bar { background: #4ade80; }
 .amber-bar { background: #fbbf24; }
-.quick-grid { margin-top: 26rpx; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12rpx; }
+.quick-grid { margin-top: 26rpx; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24rpx; }
 .quick-item { display: flex; flex-direction: column; align-items: center; gap: 18rpx; color: #78716c; font-size: 20rpx; }
 .quick-tile { width: 91rpx; height: 112rpx; border-radius: 20rpx; display: flex; align-items: center; justify-content: center; }
 .quick-mint { color: #22c55e; background: #f0fdf4; }
-.quick-amber { color: #f59e0b; background: #fffbeb; }
 .quick-sky { color: #0ea5e9; background: #f0f9ff; }
 .quick-rose { color: #f43f5e; background: #fff1f2; }
 .quick-symbol { font-size: 49rpx; font-weight: 300; }
-.note-symbol { font-size: 42rpx; }
 .chart-symbol { font-size: 55rpx; transform: rotate(-18deg); }
 .friend-symbol { font-size: 48rpx; }
 
