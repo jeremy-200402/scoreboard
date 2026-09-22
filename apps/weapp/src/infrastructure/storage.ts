@@ -3,6 +3,7 @@ import type { Room, WinnerOperation } from '../domain/models'
 
 const ROOM_KEY = 'scoreboard.rooms.v1'
 const OPERATION_KEY = 'scoreboard.operations.v1'
+const MY_PLAYER_NAME_KEY = 'scoreboard.my-player-name.v1'
 
 async function readList<T>(key: string): Promise<T[]> {
   try {
@@ -35,5 +36,18 @@ export const scoreboardRepository = {
     const operations = await this.listOperations()
     const next = [operation, ...operations.filter((item) => item.id !== operation.id)]
     await Taro.setStorage({ key: OPERATION_KEY, data: next })
+  },
+
+  async getMyPlayerName() {
+    try {
+      const result = await Taro.getStorage<string>({ key: MY_PLAYER_NAME_KEY })
+      return typeof result.data === 'string' ? result.data : ''
+    } catch {
+      return ''
+    }
+  },
+
+  async saveMyPlayerName(playerName: string) {
+    await Taro.setStorage({ key: MY_PLAYER_NAME_KEY, data: playerName.trim() })
   },
 }

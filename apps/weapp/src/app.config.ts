@@ -2,6 +2,7 @@ export default defineAppConfig({
   pages: [
     'pages/home/index',
     'pages/games/index',
+    'pages/stats/index',
     'pages/create/index',
     'pages/room/index',
     'pages/record/index'

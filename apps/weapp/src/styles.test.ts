@@ -48,6 +48,23 @@ describe('WeChat mini program styles', () => {
     expect(gamesStyles).toContain('.all-room-stack')
   })
 
+  it('provides a dedicated statistics page and routes every statistics entry to it', () => {
+    const appConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/app.config.ts'), 'utf8')
+    const homePage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/index/index.tsx'), 'utf8')
+    const gamesPage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/games/index.tsx'), 'utf8')
+    const statsPage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/stats/index.tsx'), 'utf8')
+    const statsStyles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/stats/index.css'), 'utf8')
+
+    expect(appConfig).toContain("'pages/stats/index'")
+    expect(homePage).toContain("Taro.redirectTo({ url: '/pages/stats/index' })")
+    expect(gamesPage).toContain("Taro.redirectTo({ url: '/pages/stats/index' })")
+    expect(statsPage).toContain('calculatePlayerStatistics')
+    expect(statsPage).toContain('saveMyPlayerName')
+    expect(statsPage).toContain("className='score-detail-list'")
+    expect(statsStyles).toContain('.pnl-card')
+    expect(statsStyles).toContain('.history-card')
+  })
+
   it('keeps create and room pages in the shared mahjong visual system', () => {
     const createPage = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/create/index.tsx'), 'utf8')
     const createStyles = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/create/index.css'), 'utf8')
