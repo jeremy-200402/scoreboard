@@ -66,26 +66,24 @@ export default function CreateRoomPage() {
         <View className='create-hero'>
           <View className='hero-tile'><Text>東</Text></View>
           <View className='hero-copy'>
-            <Text className='eyebrow'>新牌局</Text>
             <Text className='page-title'>谁上桌？</Text>
-            <Text className='page-lead'>所有人从 0 分开始，每局选出赢家，系统自动核对输赢。</Text>
           </View>
         </View>
 
         <View className='field'>
-          <Text className='field-label'>牌局名称 <Text className='optional'>可选</Text></Text>
+          <Text className='field-label'>牌局名称</Text>
           <Input
             className='text-input'
             value={roomName}
             maxlength={24}
-            placeholder='例如：周五麻将局'
+            placeholder='输入牌局名称'
             onInput={(event) => setRoomName(event.detail.value)}
           />
         </View>
 
         <View className='field-group'>
           <View className='field-heading'>
-            <Text>玩家</Text><Text className='optional'>{players.length}/8</Text>
+            <Text>玩家</Text><Text className='player-count'>{players.length}/8</Text>
           </View>
           <View className='player-list'>
             {players.map((player, index) => (
@@ -113,7 +111,6 @@ export default function CreateRoomPage() {
         <View className={`primary-button ${saving ? 'is-disabled' : ''}`} onClick={() => !saving && void createRoom()}>
           <Text>{saving ? '正在创建…' : '创建并开始'}</Text><Text className='button-arrow'>→</Text>
         </View>
-        <Text className='create-hint'>牌局创建后，所有记录只保存在你的小程序中</Text>
       </View>
     </View>
   )

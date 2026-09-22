@@ -7,18 +7,16 @@
 .subpage-nav-title { position: absolute; left: 150rpx; right: 150rpx; text-align: center; color: #57534e; font-size: 27rpx; font-weight: 800; }
 
 .create-page { padding-top: 18rpx; background: transparent; }
-.create-hero { position: relative; min-height: 206rpx; padding: 34rpx 28rpx; border-radius: 30rpx; box-sizing: border-box; display: flex; align-items: center; gap: 26rpx; overflow: hidden; background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); box-shadow: 0 14rpx 34rpx rgba(34, 197, 94, .07); }
+.create-hero { position: relative; min-height: 166rpx; padding: 26rpx 28rpx; border-radius: 30rpx; box-sizing: border-box; display: flex; align-items: center; gap: 26rpx; overflow: hidden; background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); box-shadow: 0 14rpx 34rpx rgba(34, 197, 94, .07); }
 .create-hero::after { position: absolute; width: 150rpx; height: 150rpx; right: -54rpx; bottom: -72rpx; border: 2rpx solid rgba(34, 197, 94, .13); border-radius: 50%; content: ''; }
 .hero-tile { width: 92rpx; height: 120rpx; flex: none; border-radius: 18rpx; display: flex; align-items: center; justify-content: center; color: #22c55e; background: #fff; box-shadow: 0 8rpx 0 #c7b9aa, 0 15rpx 26rpx rgba(68, 64, 60, .12), inset 0 2rpx 0 rgba(255, 255, 255, .9); font-family: KaiTi, STKaiti, serif; font-size: 40rpx; transform: rotate(-4deg); }
 .hero-copy { position: relative; z-index: 1; min-width: 0; }
-.create-page .eyebrow { color: #16a34a; font-size: 19rpx; letter-spacing: 4rpx; }
-.create-page .page-title { margin-top: 8rpx; color: #145148; font-size: 54rpx; }
-.create-page .page-lead { margin-top: 14rpx; margin-bottom: 0; color: #78716c; font-size: 22rpx; line-height: 1.55; }
+.create-page .page-title { color: #145148; font-size: 56rpx; }
 
 .field { margin-top: 38rpx; margin-bottom: 36rpx; }
 .field-label, .field-heading { display: block; margin-bottom: 16rpx; color: #57534e; font-size: 25rpx; font-weight: 800; }
 .field-heading { display: flex; align-items: center; justify-content: space-between; }
-.optional { color: #a8a29e; font-size: 20rpx; font-weight: 400; }
+.player-count { color: #a8a29e; font-size: 20rpx; font-weight: 400; }
 .text-input { height: 94rpx; padding: 0 27rpx; border: 2rpx solid #e7e5e4; border-radius: 22rpx; box-sizing: border-box; color: #44403c; background: #fff; box-shadow: 0 7rpx 20rpx rgba(68, 64, 60, .04); font-size: 26rpx; }
 
 .field-group { margin-bottom: 34rpx; }
@@ -35,4 +33,3 @@
 .add-player { display: block; padding: 24rpx 5rpx; color: #16a34a; font-size: 24rpx; font-weight: 800; }
 .create-page .form-error { margin: -6rpx 0 22rpx; color: #e11d48; }
 .create-page .primary-button { min-height: 100rpx; border-radius: 24rpx; background: linear-gradient(135deg, #4ade80, #22c55e); box-shadow: 0 15rpx 30rpx rgba(34, 197, 94, .22); font-size: 27rpx; }
-.create-hint { display: block; margin-top: 22rpx; text-align: center; color: #a8a29e; font-size: 18rpx; }

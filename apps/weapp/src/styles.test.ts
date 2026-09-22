@@ -74,6 +74,9 @@ describe('WeChat mini program styles', () => {
     const roomConfig = readFileSync(resolve(process.cwd(), 'apps/weapp/src/pages/room/index.config.ts'), 'utf8')
 
     expect(createPage).toContain("className='create-hero'")
+    expect(createPage).not.toContain('所有人从 0 分开始')
+    expect(createPage).not.toContain('牌局创建后，所有记录只保存在你的小程序中')
+    expect(createPage).not.toContain("className='eyebrow'>新牌局")
     expect(createPage).toContain('getMenuButtonBoundingClientRect')
     expect(createPage).toContain("Taro.reLaunch({ url: '/pages/home/index' })")
     expect(createStyles).toContain('.hero-tile')
