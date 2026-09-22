@@ -60,12 +60,7 @@ export default function StatsPage() {
       <View className='stats-ribbon' />
       <View className='stats-header' style={headerStyle}>
         <View className='stats-heading'>
-          <View>
-            <Text className='stats-eyebrow'>数据复盘</Text>
-            <Text className='stats-title'>战绩统计</Text>
-            <Text className='stats-lead'>看看每场输赢，也看看自己一路走来的总成绩。</Text>
-          </View>
-          <View className='stats-header-tile'><Text>算</Text></View>
+          <Text className='stats-title'>战绩统计</Text>
         </View>
       </View>
 
@@ -75,12 +70,12 @@ export default function StatsPage() {
         ) : playerNames.length === 0 ? (
           <View className='stats-empty stats-empty-action' onClick={() => void openCreate()}>
             <View className='stats-empty-tile'><Text>東</Text></View>
-            <View><Text className='stats-empty-title'>还没有可以统计的牌局</Text><Text className='stats-empty-note'>先开一桌，战绩会自动汇总到这里</Text></View>
+            <Text className='stats-empty-title'>还没有可以统计的牌局</Text>
           </View>
         ) : (
           <>
             <View className='identity-card'>
-              <View className='identity-heading'><Text>我是谁</Text><Text>选择你在牌局中使用的昵称</Text></View>
+              <View className='identity-heading'><Text>我是谁</Text></View>
               <View className='identity-list'>
                 {playerNames.map((playerName) => (
                   <View
@@ -98,7 +93,6 @@ export default function StatsPage() {
               <View className='pnl-decoration'><Text>中</Text></View>
               <Text className='pnl-label'>{selectedName}的总盈亏</Text>
               <View className='pnl-value'><Text>{scoreLabel(statistics.totalScore)}</Text><Text>分</Text></View>
-              <Text className='pnl-note'>只统计有效流水，已撤销的记录不会计入</Text>
             </View>
 
             <View className='stats-metrics'>
@@ -117,7 +111,7 @@ export default function StatsPage() {
             </View>
 
             {visibleHistory.length === 0 ? (
-              <View className='history-empty'><Text>还没有已结束的战绩</Text><Text>结束牌局后会保留完整结果</Text></View>
+              <View className='history-empty'><Text>还没有已结束的战绩</Text></View>
             ) : (
               <View className='history-list'>
                 {visibleHistory.map((item, index) => (
