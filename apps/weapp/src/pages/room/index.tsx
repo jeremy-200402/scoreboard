@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Text, View } from '@tarojs/components'
 import Taro, { useDidShow, useRouter } from '@tarojs/taro'
 import type { Room, WinnerOperation } from '../../domain/models'
-import { assertZeroSum, calculateScores, scoreLabel } from '../../domain/score'
+import { calculateScores, scoreLabel } from '../../domain/score'
 import { scoreboardRepository } from '../../infrastructure/storage'
 import { formatDate, now } from '../../utils'
 import './index.css'
@@ -75,11 +75,6 @@ export default function RoomPage() {
         </View>
 
         <View className='table-scoreboard'>
-          <View className='table-center'>
-            <Text className='center-label'>牌桌总分</Text>
-            <Text className='center-score'>{scores.reduce((sum, player) => sum + player.score, 0)}</Text>
-            <Text className='center-status'>{assertZeroSum(scores) ? '账目已平' : '需要核对'}</Text>
-          </View>
           <View className='score-grid'>
             {scores.map((player, index) => (
               <View className='score-card' key={player.id}>
@@ -94,7 +89,7 @@ export default function RoomPage() {
         {room.status === 'active' && (
           <View className='deal-button' onClick={() => void Taro.navigateTo({ url: `/pages/record/index?roomId=${room.id}` })}>
             <Text className='deal-mark'>记</Text>
-            <View className='deal-copy'><Text>记录本局</Text><Text>选赢家，填写每人输赢</Text></View>
+            <Text className='deal-label'>记录本局</Text>
             <Text className='deal-arrow'>→</Text>
           </View>
         )}
@@ -102,10 +97,9 @@ export default function RoomPage() {
         <View className='ledger-section'>
           <View className='section-heading'>
             <Text className='section-title'>{room.status === 'ended' ? '完整流水' : '最近流水'}</Text>
-            <Text className='section-count'>总分始终为 0</Text>
           </View>
           {operations.length === 0 ? (
-            <View className='empty-ledger'><View className='empty-ledger-tile'><Text>記</Text></View><Text>还没有本局记录</Text><Text>第一局结果会出现在这里</Text></View>
+            <View className='empty-ledger'><View className='empty-ledger-tile'><Text>記</Text></View><Text>还没有本局记录</Text></View>
           ) : (
             <View className='ledger-list'>
               {(showAll ? operations : operations.slice(0, 4)).map((operation) => {
