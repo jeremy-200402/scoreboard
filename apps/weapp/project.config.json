@@ -2,7 +2,7 @@
   "miniprogramRoot": "dist/",
   "projectname": "scoreboard-weapp",
   "description": "打牌计分微信小程序",
-  "appid": "wxd723e43935fffe2d",
+  "appid": "wx4b38ec08cfbc2d13",
   "setting": {
     "urlCheck": false,
     "es6": false,
