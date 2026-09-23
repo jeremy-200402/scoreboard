@@ -1,5 +1,6 @@
 {
   "miniprogramRoot": "dist/",
+  "cloudfunctionRoot": "cloudfunctions/",
   "projectname": "scoreboard-weapp",
   "description": "打牌计分微信小程序",
   "appid": "wx4b38ec08cfbc2d13",

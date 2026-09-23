@@ -14,6 +14,7 @@ describe('WeChat mini program styles', () => {
     const config = JSON.parse(readFileSync(resolve(process.cwd(), 'apps/weapp/project.config.json'), 'utf8'))
 
     expect(config.miniprogramRoot).toBe('dist/')
+    expect(config.cloudfunctionRoot).toBe('cloudfunctions/')
     expect(config.compileType).toBe('miniprogram')
     expect(config.setting.compileHotReLoad).toBe(false)
     expect(config.appid).toBe('wx4b38ec08cfbc2d13')
